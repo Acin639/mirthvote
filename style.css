@@ -1,0 +1,274 @@
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+background: #101b17;
+color: #f4f4ed;
+font-family: Arial, sans-serif;
+line-height: 1.6;
+}
+
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px 7%;
+border-bottom: 1px solid #26392e;
+}
+
+.logo {
+font-size: 24px;
+font-weight: bold;
+color: #b8f36b;
+}
+
+nav {
+display: flex;
+gap: 20px;
+}
+
+nav a {
+text-decoration: none;
+color: white;
+font-size: 14px;
+}
+
+.hero {
+min-height: 500px;
+padding: 80px 8%;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 30px;
+}
+
+.hero-content {
+max-width: 600px;
+}
+
+.badge {
+color: #b8f36b;
+border: 1px solid #b8f36b;
+padding: 8px 15px;
+border-radius: 30px;
+font-size: 12px;
+}
+
+h1 {
+font-size: clamp(40px, 7vw, 70px);
+line-height: 1.1;
+margin: 25px 0;
+}
+
+h1 span, h2 span {
+color: #b8f36b;
+}
+
+.hero p {
+color: #b7c4bb;
+margin-bottom: 25px;
+}
+
+.hero-icon {
+font-size: 180px;
+}
+
+.button {
+display: inline-block;
+background: #b8f36b;
+color: #101b17;
+border: none;
+padding: 14px 25px;
+border-radius: 30px;
+font-weight: bold;
+text-decoration: none;
+cursor: pointer;
+}
+
+.button:hover {
+background: white;
+}
+
+.launch {
+margin-top: 20px;
+}
+
+section {
+padding: 75px 8%;
+text-align: center;
+}
+
+h2 {
+font-size: 36px;
+margin-bottom: 10px;
+}
+
+.subtitle {
+color: #aebbb2;
+margin-bottom: 35px;
+}
+
+.features {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 20px;
+}
+
+.feature {
+background: #1a2a21;
+padding: 30px;
+border-radius: 18px;
+border: 1px solid #2d4134;
+}
+
+.feature h3 {
+color: #b8f36b;
+margin-bottom: 10px;
+}
+
+.feature p {
+color: #bdc8bf;
+}
+.feature a{
+    text-decoration:none;
+    color:#bdc8bf;
+}
+.offer {
+background: #b8f36b;
+color: #142016;
+}
+
+.offer h2 {
+color: #142016;
+}
+
+.price {
+margin: 25px;
+}
+
+.price del {
+font-size: 20px;
+margin-right: 15px;
+}
+
+.price strong {
+font-size: 40px;
+}
+
+.offer .button {
+background: #142016;
+color: white;
+}
+
+.reactions {
+display: flex;
+justify-content: center;
+gap: 15px;
+margin: 30px;
+}
+
+.reactions button {
+background: #1a2a21;
+color: white;
+border: 1px solid #405747;
+padding: 15px 22px;
+border-radius: 12px;
+cursor: pointer;
+}
+
+.comment-box, .booking-box {
+max-width: 500px;
+margin: 30px auto;
+background: #1a2a21;
+padding: 25px;
+border-radius: 18px;
+}
+
+input, textarea {
+width: 100%;
+background: #101b17;
+border: 1px solid #405747;
+color: white;
+padding: 15px;
+margin: 10px 0;
+border-radius: 10px;
+outline: none;
+}
+
+textarea {
+min-height: 110px;
+}
+
+.comment-box .button,
+.booking-box .button {
+width: 100%;
+}
+
+#comments {
+max-width: 500px;
+margin: auto;
+text-align: left;
+}
+
+.comment {
+background: #1a2a21;
+padding: 15px;
+margin: 12px 0;
+border-radius: 10px;
+overflow-wrap: anywhere;
+}
+
+.comment strong {
+color: #b8f36b;
+}
+
+footer {
+text-align: center;
+padding: 40px 15px;
+background: #0b130f;
+color: #aebbb2;
+}
+
+footer a {
+color: #b8f36b;
+display: inline-block;
+margin: 10px;
+text-decoration:none;
+}
+
+#commentMessage, #bookingMessage {
+margin-top: 12px;
+}
+
+@media(max-width:650px) {
+header {
+flex-direction: column;
+gap: 15px;
+}
+
+nav {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero {
+    flex-direction: column;
+    text-align: center;
+}
+
+.hero-icon {
+    font-size: 120px;
+}
+
+.features {
+    grid-template-columns: 1fr;
+}
+
+}

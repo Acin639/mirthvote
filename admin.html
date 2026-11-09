@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mirth Admin</title><link rel="stylesheet" href="style.css">
+<link rel="icon" href="https://em-content.zobj.net/source/apple/391/shamrock_2618.png"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+.admin-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    background: #1a2a21;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.stat h2 {
+    color: #b8f36b;
+}
+
+table {
+    width: 100%;
+    margin-top: 25px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-bottom: 1px solid #405747;
+    padding: 12px;
+    text-align: left;
+}
+
+.admin-section {
+    margin-top: 40px;
+    overflow-x: auto;
+}
+
+#dashboard {
+    display: none;
+}
+
+@media(max-width:500px) {
+    table {
+        font-size: 12px;
+    }
+}
+</style></head><body><header>
+    <div class="logo">☘️ MIRTH ADMIN</div>
+</header><div class="admin-container"><div id="login">
+
+    <h2>Administrator Login</h2>
+
+    <input id="email" type="email" placeholder="Admin email">
+
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="button" onclick="loginAdmin()">
+        Login
+    </button>
+
+    <p id="loginMessage"></p>
+
+</div>
+
+
+<div id="dashboard">
+
+    <h1>Dashboard ☘️</h1>
+
+    <button class="button" onclick="logoutAdmin()">
+        Logout
+    </button>
+
+    <div class="stats">
+
+        <div class="stat">
+            <p>Likes</p>
+            <h2 id="totalLikes">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Dislikes</p>
+            <h2 id="totalDislikes">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Bookings</p>
+            <h2 id="totalBookings">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Comments</p>
+            <h2 id="totalComments">0</h2>
+        </div>
+
+    </div>
+
+
+    <div class="admin-section">
+
+        <h2>Bookings</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody id="bookingList"></tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="admin-section">
+
+        <h2>Comments</h2>
+
+        <div id="commentList"></div>
+
+    </div>
+
+</div>
+
+</div><script>
+
+const SUPABASE_URL = "https://banuamtxoelzmgagbliy.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_0cDE0IM0GaIKycirs4RO-g_81dWg4Xj";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+async function loginAdmin() {
+
+    const email = document.getElementById("email").value;
+
+    const password = document.getElementById("password").value;
+
+    const { error } = await db.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+
+        document.getElementById("loginMessage").textContent = error.message;
+
+        return;
+    }
+
+    document.getElementById("login").style.display = "none";
+
+    document.getElementById("dashboard").style.display = "block";
+
+    loadDashboard();
+
+}
+
+
+async function logoutAdmin() {
+
+    await db.auth.signOut();
+
+    location.reload();
+
+}
+
+
+async function loadDashboard() {
+
+    const [reactions, bookings, comments] = await Promise.all([
+
+        db.from("mirth_reactions").select("reaction"),
+
+        db.from("mirth_bookings").select("*").order("created_at", {ascending:false}),
+
+        db.from("mirth_comments").select("*").order("created_at", {ascending:false})
+
+    ]);
+
+    if (reactions.error || bookings.error || comments.error) {
+        alert("Some data could not be loaded. Check your Supabase permissions.");
+        console.error(reactions.error, bookings.error, comments.error);
+    }
+
+    const r = reactions.data || [];
+    const b = bookings.data || [];
+    const c = comments.data || [];
+
+    document.getElementById("totalLikes").textContent =
+        r.filter(x => x.reaction === "like").length;
+
+    document.getElementById("totalDislikes").textContent =
+        r.filter(x => x.reaction === "dislike").length;
+
+    document.getElementById("totalBookings").textContent = b.length;
+
+    document.getElementById("totalComments").textContent = c.length;
+
+
+    document.getElementById("bookingList").innerHTML = "";
+
+    b.forEach(item => {
+
+        const row = document.createElement("tr");
+
+        [item.name, item.contact || "Not provided",
+         item.created_at ? new Date(item.created_at).toLocaleString() : ""
+        ].forEach(value => {
+
+            const cell = document.createElement("td");
+
+            cell.textContent = value;
+
+            row.appendChild(cell);
+
+        });
+
+        document.getElementById("bookingList").appendChild(row);
+
+    });
+
+
+    document.getElementById("commentList").innerHTML = "";
+
+    c.forEach(item => {
+
+        const box = document.createElement("div");
+
+        box.className = "comment";
+
+        const name = document.createElement("strong");
+
+        name.textContent = item.name;
+
+        const text = document.createElement("p");
+
+        text.textContent = item.comment;
+
+        box.appendChild(name);
+
+        box.appendChild(text);
+
+        document.getElementById("commentList").appendChild(box);
+
+    });
+
+}
+
+
+db.auth.getSession().then(({data}) => {
+
+    if (data.session) {
+
+        document.getElementById("login").style.display = "none";
+
+        document.getElementById("dashboard").style.display = "block";
+
+        loadDashboard();
+
+    }
+
+});
+
+</script></body>
+</html>
